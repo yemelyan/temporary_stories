@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Force black text in story prose content - override Typography defaults */
+.prose,
+.prose p,
+.prose li,
+.prose ul,
+.prose ol,
+.prose strong,
+.prose span,
+.prose div {
+  color: #000000 !important;
+}
+
+/* Keep links blue */
+.prose a {
+  color: #003399 !important;
+}
+
+/* Ensure proper paragraph spacing - override Typography defaults */
+.prose p + p {
+  margin-top: 1.25em !important;
+}
+
+.prose p {
+  margin-bottom: 1.25em !important;
+  display: block !important;
+}
+
+.prose p:first-of-type {
+  margin-top: 0 !important;
+}
+
+.prose p:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+/* Ensure headings have proper spacing and are displayed as block */
+.prose h2 {
+  margin-top: 2em !important;
+  margin-bottom: 1em !important;
+  font-weight: 700 !important;
+  font-size: 1.5em !important;
+  display: block !important;
+  color: #1f2937 !important; /* gray-900 for headings */
+}
+
+.prose h2:first-of-type {
+  margin-top: 0 !important;
+}
+
+/* Ensure lists have proper spacing and display */
+.prose ul,
+.prose ol {
+  margin-top: 1.25em !important;
+  margin-bottom: 1.25em !important;
+  padding-left: 1.625em !important;
+  display: block !important;
+}
+
+.prose li {
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+  display: list-item !important;
+}
+
+/* Ensure paragraphs after headings have space */
+.prose h2 + p {
+  margin-top: 1em !important;
+}
+
+/* Ensure paragraphs after lists have space */
+.prose ul + p,
+.prose ol + p {
+  margin-top: 1.25em !important;
+}
