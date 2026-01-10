@@ -25,7 +25,7 @@ export default async function StoryPage({
     notFound();
   }
 
-  const formattedDate = format(new Date(story.date), 'dd MMM yyyy');
+  const formattedDate = story.date ? format(new Date(story.date), 'dd MMM yyyy') : null;
 
   return (
     <article className="bg-white">
@@ -34,7 +34,7 @@ export default async function StoryPage({
         {story.image ? (
           <Image
             src={story.image}
-            alt={story.title}
+            alt={story.title || 'Story cover image'}
             fill
             className="object-cover"
             priority
@@ -64,7 +64,7 @@ export default async function StoryPage({
           <div className="w-full bg-gradient-to-t from-black/80 to-transparent pb-12 pt-32">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl lg:text-6xl">
-                {story.title}
+                {story.title || 'Untitled Story'}
               </h1>
             </div>
           </div>
@@ -74,13 +74,15 @@ export default async function StoryPage({
       {/* Main Content */}
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Metadata */}
-        <div className="mb-8 flex flex-col gap-2 border-b border-gray-200 pb-8 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <time dateTime={story.date}>{formattedDate}</time>
-            <span className="hidden sm:inline">•</span>
-            <span className="font-medium">By project IMPETUS</span>
+        {formattedDate && (
+          <div className="mb-8 flex flex-col gap-2 border-b border-gray-200 pb-8 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <time dateTime={story.date || ''}>{formattedDate}</time>
+              <span className="hidden sm:inline">•</span>
+              <span className="font-medium">By project IMPETUS</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Summary */}
         {story.summary && (
@@ -100,14 +102,22 @@ export default async function StoryPage({
             <story.content />
           ) : story.content && React.isValidElement(story.content) ? (
             story.content
-          ) : story.content && typeof story.content === 'object' && story.content !== null && 'default' in story.content ? (
-            typeof story.content.default === 'function' ? (
-              <story.content.default />
-            ) : typeof story.content.default === 'string' ? (
-              <ReactMarkdown>{story.content.default}</ReactMarkdown>
-            ) : (
-              <div className="text-black">{String(story.content.default || '')}</div>
-            )
+          ) : story.content && typeof story.content === 'object' && story.content !== null ? (
+            (() => {
+              const contentWithDefault = story.content as { default?: unknown };
+              if ('default' in contentWithDefault) {
+                const contentDefault = contentWithDefault.default;
+                if (typeof contentDefault === 'function') {
+                  const Component = contentDefault as React.ComponentType;
+                  return <Component />;
+                } else if (typeof contentDefault === 'string') {
+                  return <ReactMarkdown>{contentDefault}</ReactMarkdown>;
+                } else {
+                  return <div className="text-black">{String(contentDefault || '')}</div>;
+                }
+              }
+              return null;
+            })()
           ) : typeof story.content === 'string' ? (
             <ReactMarkdown>{story.content}</ReactMarkdown>
           ) : (

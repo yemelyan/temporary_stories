@@ -4,10 +4,10 @@ import { format } from 'date-fns';
 
 interface StoryCardProps {
   id: string;
-  title: string;
-  summary: string;
-  date: string;
-  image?: string;
+  title: string | null | undefined;
+  summary: string | null | undefined;
+  date: string | null | undefined;
+  image?: string | null | undefined;
 }
 
 export default function StoryCard({
@@ -17,7 +17,7 @@ export default function StoryCard({
   date,
   image,
 }: StoryCardProps) {
-  const formattedDate = format(new Date(date), 'dd MMM yyyy');
+  const formattedDate = date ? format(new Date(date), 'dd MMM yyyy') : null;
 
   return (
     <Link
@@ -29,7 +29,7 @@ export default function StoryCard({
         {image ? (
           <Image
             src={image}
-            alt={title}
+            alt={title || 'Story cover image'}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -74,13 +74,15 @@ export default function StoryCard({
       {/* Content */}
       <div className="p-6">
         <h3 className="mb-2 text-lg font-semibold leading-tight text-gray-900 transition-colors group-hover:text-[#003399]">
-          {title}
+          {title || 'Untitled Story'}
         </h3>
-        <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-600">
-          {summary}
-        </p>
+        {summary && (
+          <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-600">
+            {summary}
+          </p>
+        )}
         <div className="flex items-center justify-between text-xs text-gray-500">
-          <span>{formattedDate}</span>
+          {formattedDate && <span>{formattedDate}</span>}
           <span className="font-medium">By project IMPETUS</span>
         </div>
       </div>

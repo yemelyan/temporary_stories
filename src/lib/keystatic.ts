@@ -21,8 +21,9 @@ export async function getAllStories() {
         };
       })
       .sort((a, b) => {
-        const dateA = new Date(a.entry.date).getTime();
-        const dateB = new Date(b.entry.date).getTime();
+        // Handle null/undefined dates - put them at the end
+        const dateA = a.entry.date ? new Date(a.entry.date).getTime() : 0;
+        const dateB = b.entry.date ? new Date(b.entry.date).getTime() : 0;
         return dateB - dateA; // Sort by date, newest first
       });
   } catch (error) {

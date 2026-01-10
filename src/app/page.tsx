@@ -33,10 +33,10 @@ export default async function Home() {
               <StoryCard
                 key={story.id}
                 id={story.id}
-                title={story.entry.title}
-                summary={story.entry.summary}
-                date={story.entry.date}
-                image={story.entry.image}
+                title={story.entry.title || null}
+                summary={story.entry.summary || null}
+                date={story.entry.date || null}
+                image={story.entry.image || null}
               />
             ))}
           </div>
