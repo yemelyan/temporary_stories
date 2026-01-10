@@ -14,10 +14,18 @@ export async function getAllStories() {
         // story.slug is the filename (e.g., "001"), which is what we use for routing
         // Use story.slug as the ID for routing (it's reliable and URL-safe)
         const id = story.slug;
+        const entry = story.entry;
         
+        // Normalize nullable fields to ensure type safety for StoryCard component
         return {
           id, // Use story.slug (filename-based) which is reliable
-          entry: story.entry,
+          entry: {
+            ...entry,
+            title: (entry.title ?? null) as string | null,
+            summary: (entry.summary ?? null) as string | null,
+            date: (entry.date ?? null) as string | null,
+            image: (entry.image ?? null) as string | null,
+          },
         };
       })
       .sort((a, b) => {

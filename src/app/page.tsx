@@ -29,16 +29,19 @@ export default async function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {stories.map((story) => (
-              <StoryCard
-                key={story.id}
-                id={story.id}
-                title={story.entry.title || null}
-                summary={story.entry.summary || null}
-                date={story.entry.date || null}
-                image={story.entry.image || null}
-              />
-            ))}
+            {stories.map((story) => {
+              const entry = story.entry;
+              return (
+                <StoryCard
+                  key={story.id}
+                  id={story.id}
+                  title={(entry.title as string | null | undefined) ?? null}
+                  summary={(entry.summary as string | null | undefined) ?? null}
+                  date={(entry.date as string | null | undefined) ?? null}
+                  image={(entry.image as string | null | undefined) ?? null}
+                />
+              );
+            })}
           </div>
         )}
       </div>

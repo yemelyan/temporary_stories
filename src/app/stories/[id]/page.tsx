@@ -6,6 +6,8 @@ import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import { getStoryById, getAllStories } from '@/lib/keystatic';
 
+export const runtime = 'edge';
+
 export async function generateStaticParams() {
   const stories = await getAllStories();
   return stories.map((story) => ({
