@@ -6,8 +6,8 @@ import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import { getStoryById, getAllStories } from '@/lib/keystatic';
 
-export const runtime = 'edge';
-
+// This route is statically generated via generateStaticParams()
+// Static routes should NOT use edge runtime - they're pre-rendered at build time
 export async function generateStaticParams() {
   const stories = await getAllStories();
   return stories.map((story) => ({

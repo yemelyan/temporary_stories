@@ -3,6 +3,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import keystaticConfig from '../../keystatic.config';
 
+// This code only runs at BUILD TIME (during static generation via generateStaticParams)
+// It never runs at runtime, so fs is safe to use here
 export const reader = createReader(process.cwd(), keystaticConfig);
 
 export async function getAllStories() {
@@ -62,10 +64,10 @@ export async function getStoryById(id: string) {
     // Use the slug as the ID (it's the filename "001")
     const storyId = matchingStory.slug;
     
-    // Get raw markdown content - always read the file directly (simplest, most reliable)
+    // Read raw markdown from file at BUILD TIME (this only runs during static generation)
+    // This is safe because generateStaticParams() runs at build time, not runtime
     let rawMarkdown: string | undefined;
     try {
-      // Read the MDX file directly to get raw markdown content
       const filePath = join(process.cwd(), 'src', 'content', 'stories', `${storyId}.mdx`);
       const fileContent = readFileSync(filePath, 'utf-8');
       
@@ -85,15 +87,13 @@ export async function getStoryById(id: string) {
       }
       
       if (frontmatterEndIndex !== -1) {
-        // Get content after the second --- (frontmatter end)
         rawMarkdown = lines.slice(frontmatterEndIndex + 1).join('\n').trim();
       } else {
-        // If no frontmatter, use entire content
         rawMarkdown = fileContent.trim();
       }
     } catch (e) {
       console.error(`Error reading MDX file for story ${storyId}:`, e);
-      // Last resort: if entry.content is a string, use it (though it might be unprocessed)
+      // Fallback: try to use entry.content if it's a string
       if (typeof entry.content === 'string') {
         rawMarkdown = entry.content;
       }
