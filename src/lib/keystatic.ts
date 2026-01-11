@@ -1,11 +1,30 @@
 import { createReader } from '@keystatic/core/reader';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import keystaticConfig from '../../keystatic.config';
 
 // This code only runs at BUILD TIME (during static generation via generateStaticParams)
 // It never runs at runtime, so fs is safe to use here
-export const reader = createReader(process.cwd(), keystaticConfig);
+// Use a more reliable way to get the project root that works in both ESM and CommonJS
+function getProjectRoot(): string {
+  // Try process.cwd() first (works in Node.js)
+  if (typeof process !== 'undefined' && process.cwd) {
+    return process.cwd();
+  }
+  // Fallback for ESM modules
+  if (typeof import.meta !== 'undefined' && import.meta.url) {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    // Go up from src/lib to project root
+    return join(__dirname, '../..');
+  }
+  // Last resort
+  return '.';
+}
+
+export const reader = createReader(getProjectRoot(), keystaticConfig);
 
 export async function getAllStories() {
   try {
@@ -68,7 +87,8 @@ export async function getStoryById(id: string) {
     // This is safe because generateStaticParams() runs at build time, not runtime
     let rawMarkdown: string | undefined;
     try {
-      const filePath = join(process.cwd(), 'src', 'content', 'stories', `${storyId}.mdx`);
+      const projectRoot = getProjectRoot();
+      const filePath = join(projectRoot, 'src', 'content', 'stories', `${storyId}.mdx`);
       const fileContent = readFileSync(filePath, 'utf-8');
       
       // Extract content after frontmatter (everything after the second --- line)
