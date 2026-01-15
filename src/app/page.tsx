@@ -45,6 +45,35 @@ export default async function Home() {
           </div>
         )}
       </div>
+
+      {/* Newsletter Section */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-900">
+            Newsletter
+          </h2>
+          <p className="mb-6 text-gray-600">
+            Subscribe to receive new stories and project updates.
+          </p>
+          <div className="w-full overflow-hidden rounded-md bg-white shadow-sm">
+            <iframe
+              title="Newsletter signup form"
+              width={540}
+              height={305}
+              src="https://fa742c10.sibforms.com/serve/MUIFAAPDvJ2bIHsokYbTs_DCjCjlLyomKSt1ETG2tIiFUScaKXgq7bpmbaZzrG3aFeaf71p20m4eqS8i9wbY5QdKgLrlvCTkoPIl9FzdpQ9fV_J0p_AgRe9zTKSLd0fNi2yHcPo1PzKZBu3LCfJKJIxbHRQPD_HcrZCXHXPlSOLtcPM90A1ziT0VvLFWcShajuLbRk-PRXfw1J6pgQ=="
+              frameBorder="0"
+              scrolling="auto"
+              allowFullScreen
+              style={{
+                display: 'block',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                maxWidth: '100%',
+              }}
+            />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
